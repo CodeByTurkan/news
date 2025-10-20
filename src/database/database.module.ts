@@ -25,8 +25,9 @@ import { User } from '../entities/user.entities';
           username: dbConfig.username,
           password: dbConfig.password,
           database: dbConfig.database,
-          autoLoadEntities: true,
+          autoLoadEntities: true, //createdaAt
           synchronize: true,
+          // logging: true,
           entities: [User],
         };
       },
