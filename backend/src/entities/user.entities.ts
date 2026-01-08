@@ -9,9 +9,12 @@ export class User extends BaseEntity {
   @Column({ unique: true })
   username: string;
 
-  @Column({ nullable: true })
-  email: string;
+  @Column()
+  password: string;
 
   @Column({ type: 'enum', enum: UserEnums, default: UserEnums.MALE })
-  password: UserEnums;
+  gender: UserEnums;
+
+  @Column({ nullable: true })
+  fullname: string;
 }

@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 import { AuthRegisterDto } from './dto/auth-register.dto';
 import { JwtService } from '@nestjs/jwt';
 import { AuthSignInDto } from './dto/auth-signin.dto';
-import { compare } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -44,15 +44,29 @@ export class AuthService {
 
   // sene parampertler gelelcek hansiki bu validation tipde olacaq, dtodan gelen
   async register(params: AuthRegisterDto) {
-    const checkUserName = await this.userRepo.exists({
+    const checkUserName = await this.userRepo.findOne({
       where: { username: params.username }, //username parampemtrlerden gelen username == olan
     });
 
     if (checkUserName)
-      throw new ConflictException('Username is alreadt exists');
+      throw new ConflictException('Username is already exists');
 
-    const user = this.userRepo.create(params as any);
+    const hashedPassword = await hash(params.password, 10);
+
+    const user = this.userRepo.create({
+      ...params,
+      password: hashedPassword,
+    });
 
     await this.userRepo.save(user);
+
+    const token = this.jwtService.sign({ userId: user.id });
+    return {
+      user: {
+        ...user,
+        password: undefined,
+      },
+      token,
+    };
   }
 }

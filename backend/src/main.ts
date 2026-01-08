@@ -10,6 +10,7 @@ async function bootstrap() {
     .setTitle('News')
     .setDescription('The News API description')
     .setVersion('1.0')
+    .addBearerAuth()
     .addTag('news')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
