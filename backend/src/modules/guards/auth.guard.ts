@@ -14,8 +14,8 @@ export class AuthGuards implements CanActivate {
     private userService: UserService,
   ) {} //constuctor burda ilk iccrani temin edir, this yazmaq yerine yaziriq
 
-  canActivate(context: ExecutionContext): Promise<boolean> {
-    let request: Request = context.switchToHttp().getRequest(); //headerdeki get reuqest emrine access edirik
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    let request = context.switchToHttp().getRequest(); //headerdeki get reuqest emrine access edirik
     let token = request.headers.authorization || '';
     token = token.split(' ')[1];
 

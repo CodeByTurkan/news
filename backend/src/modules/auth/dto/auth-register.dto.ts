@@ -13,7 +13,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class AuthRegisterDto {
   @Type()
   @IsString()
-  @Length(5, 30)
+  @Length(3, 30)
   @ApiProperty({ default: 'Turkan' })
   @IsAlphanumeric()
   username: string;
