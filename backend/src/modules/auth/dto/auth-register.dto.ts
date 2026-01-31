@@ -21,7 +21,7 @@ export class AuthRegisterDto {
   @Type()
   @IsString()
   @MinLength(6)
-  @ApiProperty({ default: 'admin123' })
+  @ApiProperty({ default: '123456' })
   password: string;
 
   @Type()
@@ -32,6 +32,6 @@ export class AuthRegisterDto {
   @Type()
   @IsString()
   @IsOptional()
-  @ApiProperty({ nullable: true, default: 'Turkan Isayeva  ' })
+  @ApiProperty({ nullable: true, default: 'Turkan Isayeva' })
   fullname: string;
 }

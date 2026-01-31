@@ -18,7 +18,8 @@ export class AuthGuards implements CanActivate {
     let request = context.switchToHttp().getRequest(); //headerdeki get reuqest emrine access edirik
     let token = request.headers.authorization || '';
     token = token.split(' ')[1];
-
+    // sonra tokeni extract edirik, tokeni split edirik ve 1 indeksini alirik, 0 indeksi bele biri qebul edir, 1 indeksi ise tokeni tutur.
+    // token ile id ni gotururuq ve useri tapiriq. GET ile 
     if (!token) {
       throw new UnauthorizedException('Unauthorized');
     }
@@ -30,7 +31,7 @@ export class AuthGuards implements CanActivate {
 
       request['user'] = payload;
     } catch (err: any) {
-      throw new UnauthorizedException('unauthhorized');
+      throw new UnauthorizedException('Unauthorized');
     }
     return true;
   }

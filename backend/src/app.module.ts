@@ -4,6 +4,7 @@ import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import config from './config/app.config';
+import { NewsModule } from './modules/news/news.module';
 
 @Module({
   imports: [
@@ -14,8 +15,9 @@ import config from './config/app.config';
       global: true,
       secret: config().app.jwtSecret,
       // i was treating func. as an object therfore it didint work
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '10m' },
     }),
+    NewsModule,
   ],
 })
 export class AppModule {}
