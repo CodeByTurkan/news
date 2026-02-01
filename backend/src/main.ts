@@ -13,9 +13,10 @@ async function bootstrap() {
     .setDescription('The News API description')
     .setVersion('1.0')
     .addBearerAuth()
-    .addTag('News', 'News endpoints')
-    .addTag('Auth', 'Authentication(login, register)')
     .addTag('User', 'User management')
+    .addTag('News', 'News endpoints')
+    .addTag('Category', 'Categories')
+    .addTag('Auth', 'Authentication(login, register)')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory, {

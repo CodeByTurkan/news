@@ -5,6 +5,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import config from './config/app.config';
 import { NewsModule } from './modules/news/news.module';
+import { CategoryModule } from './modules/category/category.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { NewsModule } from './modules/news/news.module';
       signOptions: { expiresIn: '10m' },
     }),
     NewsModule,
+    CategoryModule,
   ],
 })
 export class AppModule {}
