@@ -5,14 +5,22 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { CategoryEntity } from './category.entities';
 
 @Entity('news')
 export class NewsEntities extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column()
+  categoryId: number;
+
+  @ManyToOne(() => CategoryEntity, (item: CategoryEntity) => item.news)
+  category: CategoryEntity;
 
   @Column()
   title: string;

@@ -4,13 +4,19 @@ import {
   BeforeUpdate,
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { NewsEntities } from './news.entities';
 
 @Entity('categories')
 export class CategoryEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  // oldugumuz ve qosacagimiz => category and xeber
+  @OneToMany(() => NewsEntities, (item: NewsEntities) => item.category)
+  news: NewsEntities[];
 
   @Column()
   name: string;

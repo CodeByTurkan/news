@@ -1,6 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsString, IsUrl, Length, Matches, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsUrl,
+  Length,
+  Matches,
+  IsOptional,
+  IsInt,
+} from 'class-validator';
 
 export class NewsRequest {
   @Type()
@@ -33,4 +40,9 @@ export class NewsRequest {
     default: 'https://images.unsplash.com/photo-1769607590916-70161e6020db',
   })
   thumbnail: string;
+
+  @Type()
+  @IsInt()
+  @ApiProperty({ default: 1 })
+  categoryId: number;
 }

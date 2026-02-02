@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsOptional, IsString, Length, Matches } from 'class-validator';
 
-export class CategoryDto {
+export class CategoryRequestDto {
   @Type()
   @IsString()
   @Length(3, 15)
