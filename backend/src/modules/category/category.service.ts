@@ -19,6 +19,15 @@ export class CategoryService {
   list() {
     return this.categoryRepo.find();
   }
+
+  async categoryAllNews(categoryId: number) {
+    const news = await this.categoryRepo.find({
+      where: { id: categoryId },
+      relations: ['news'],
+    });
+    return news;
+  }
+
   create(categoryRequestDto: CategoryRequestDto) {
     const newCategory = this.categoryRepo.create(categoryRequestDto);
     return this.categoryRepo.save(newCategory);

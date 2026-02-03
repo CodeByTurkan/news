@@ -1,10 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { NewsEntities } from '../../entities/news.entities';
 import { NewsRequest } from './dto/news-request.dto';
 import { CategoryService } from '../category/category.service';
 import { UpdateNewsRequest } from './dto/update-request';
+import { ListNews } from './dto/list-news.dto';
 
 @Injectable()
 export class NewsService {
@@ -14,8 +15,17 @@ export class NewsService {
     private readonly newsEntity: Repository<NewsEntities>,
   ) {}
 
-  list() {
-    return this.newsEntity.find();
+  list(params: ListNews) {
+    const where: FindOptionsWhere<NewsEntities> = {};
+    // bura any de qoymaq olar amma best practice deyil, topleri bele tapmaq olar
+    if (params.category) {
+      where.categoryId = params.category;
+    } //queryde category gonderilende,bu formada ?categoryId=3 sadece  hemen categoryideki xeberleri , desc orderla gotur, eks halda, where = {} oldugu ucun hamisini goster.
+    return this.newsEntity.find({
+      where,
+      relations: ['category'],
+      order: { createdAt: 'DESC' },
+    });
   }
 
   async create(newsDto: NewsRequest) {
