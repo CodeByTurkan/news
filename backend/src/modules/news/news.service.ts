@@ -53,4 +53,18 @@ export class NewsService {
     await this.newsEntity.update({ id }, updateDto);
     return { message: 'News is being updated succesfully' };
   }
+
+  async like(id: number) {
+    const news = await this.newsEntity.findOne({ where: { id } });
+    if (!news) throw new NotFoundException('like not found');
+    await this.newsEntity.increment({ id }, 'like', 1);
+    return this.newsEntity.findOne({ where: { id } });
+  }
+
+  async dislike(id: number) {
+    const news = await this.newsEntity.findOne({ where: { id } });
+    if (!news) throw new NotFoundException('dislike not found');
+    await this.newsEntity.decrement({ id }, 'dislike', 1);
+    return this.newsEntity.findOne({ where: { id } });
+  }
 }

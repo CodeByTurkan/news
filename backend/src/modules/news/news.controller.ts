@@ -39,4 +39,19 @@ export class NewsController {
   //api/news?category=1&color=black
   //api/news/:id - params
   //api/news - body
+
+  @Post(':id/like')
+  @UseGuards(AuthGuards)
+  @ApiBearerAuth()
+  like(@Param('id') id: string) {
+    return this.newsService.like(+id);
+  }
+  // We use id: string because that’s what the URL gives us, and we use +id so the service gets an actual number. Writing id: number doesn’t change the runtime value; conversion is still required.
+
+  @Post(':id/dislike')
+  @UseGuards(AuthGuards)
+  @ApiBearerAuth()
+  dislike(@Param('id') id: string) {
+    return this.newsService.dislike(+id);
+  }
 }

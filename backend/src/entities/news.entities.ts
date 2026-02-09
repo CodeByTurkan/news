@@ -16,7 +16,7 @@ export class NewsEntities extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
   categoryId: number;
 
   @ManyToOne(() => CategoryEntity, (item: CategoryEntity) => item.news)
