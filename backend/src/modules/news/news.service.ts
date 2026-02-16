@@ -95,13 +95,17 @@ export class NewsService {
     }
     switch (type) {
       case NewsActionTypes.LIKE:
-        await this.newsEntity.increment({ id }, 'like', increaseValue);
+        await this.newsEntity.increment({ id: newsId }, 'like', increaseValue);
         break;
       case NewsActionTypes.DISLIKE:
-        await this.newsEntity.increment({ id }, 'dislike', increaseValue);
+        await this.newsEntity.increment(
+          { id: newsId },
+          'dislike',
+          increaseValue,
+        );
         break;
       case NewsActionTypes.VIEW:
-        await this.newsEntity.increment({ id }, 'view', increaseValue);
+        await this.newsEntity.increment({ id: newsId }, 'view', increaseValue);
         break;
 
       default:

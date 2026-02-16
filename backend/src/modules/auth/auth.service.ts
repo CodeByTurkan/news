@@ -1,6 +1,7 @@
 import {
   ConflictException,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,18 +19,26 @@ export class AuthService {
     private userRepo: Repository<User>,
     private jwtService: JwtService,
   ) {}
+  private readonly logger = new Logger(AuthService.name);
 
   async signin(params: AuthSignInDto) {
     const user = await this.userRepo.findOne({
       where: { username: params.username },
     });
+
     if (!user) {
-      throw new UnauthorizedException('User is wrong');
+      this.logger.warn(`Loggin Failed:User not found`, {
+        username: params.username,
+      });
+      throw new UnauthorizedException('Invalid credentials');
     }
 
     const checkPassword = await compare(params.password, user.password);
     if (!checkPassword) {
-      throw new UnauthorizedException('Password is wrong');
+      this.logger.warn(`Loggin Failed:Invalid password`, {
+        username: params.username,
+      });
+      throw new UnauthorizedException('Invalid credentials');
     }
 
     const token = this.jwtService.sign({ userId: user.id });
