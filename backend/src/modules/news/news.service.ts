@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { NewsEntities } from '../../entities/news.entities';
@@ -6,6 +10,8 @@ import { NewsRequest } from './dto/news-request.dto';
 import { CategoryService } from '../category/category.service';
 import { UpdateNewsRequest } from './dto/update-request';
 import { ListNews } from './dto/list-news.dto';
+import { NewsActionTypes } from './news.types';
+import { NewsActionEntity } from '../../entities/newsActionHistory.entities';
 
 @Injectable()
 export class NewsService {
@@ -13,6 +19,8 @@ export class NewsService {
     private readonly categoryService: CategoryService,
     @InjectRepository(NewsEntities)
     private readonly newsEntity: Repository<NewsEntities>,
+    @InjectRepository(NewsActionEntity)
+    private readonly newsAction: Repository<NewsActionEntity>,
   ) {}
 
   list(params: ListNews) {
@@ -54,17 +62,55 @@ export class NewsService {
     return { message: 'News is being updated succesfully' };
   }
 
-  async like(id: number) {
-    const news = await this.newsEntity.findOne({ where: { id } });
-    if (!news) throw new NotFoundException('like not found');
-    await this.newsEntity.increment({ id }, 'like', 1);
-    return this.newsEntity.findOne({ where: { id } });
-  }
+  // async like(id: number) {
+  //   const news = await this.newsEntity.findOne({ where: { id } });
+  //   if (!news) throw new NotFoundException('like not found');
+  //   await this.newsEntity.increment({ id }, 'like', 1);
+  //   return this.newsEntity.findOne({ where: { id } });
+  // }
 
-  async dislike(id: number) {
-    const news = await this.newsEntity.findOne({ where: { id } });
-    if (!news) throw new NotFoundException('dislike not found');
-    await this.newsEntity.decrement({ id }, 'dislike', 1);
-    return this.newsEntity.findOne({ where: { id } });
+  // async dislike(id: number) {
+  //   const news = await this.newsEntity.findOne({ where: { id } });
+  //   if (!news) throw new NotFoundException('dislike not found');
+  //   await this.newsEntity.increment({ id }, 'dislike', 1);
+  //   return this.newsEntity.findOne({ where: { id } });
+  // }
+
+  async action(newsId: number, type: NewsActionTypes, userId: number) {
+    const findNews = await this.newsEntity.findOne({ where: { id: newsId } });
+    if (!findNews) throw new NotFoundException('news is not found');
+    const checkAction = await this.newsAction.findOne({
+      where: { newsId: newsId, userId: userId, actionTypes: type },
+    });
+    let increaseValue = 1;
+    if (checkAction) {
+      await checkAction.remove();
+      increaseValue = -1;
+    } else {
+      await this.newsAction.save({
+        newsId: newsId,
+        userId: userId,
+        actionTypes: type,
+      });
+    }
+    switch (type) {
+      case NewsActionTypes.LIKE:
+        await this.newsEntity.increment({ id }, 'like', increaseValue);
+        break;
+      case NewsActionTypes.DISLIKE:
+        await this.newsEntity.increment({ id }, 'dislike', increaseValue);
+        break;
+      case NewsActionTypes.VIEW:
+        await this.newsEntity.increment({ id }, 'view', increaseValue);
+        break;
+
+      default:
+        throw new BadRequestException('Provided action is invalid');
+        break;
+    }
+    return {
+      message:
+        increaseValue === 1 ? 'Action is performed' : 'Action is deleted',
+    };
   }
 }

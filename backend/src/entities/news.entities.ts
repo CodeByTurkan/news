@@ -10,6 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { CategoryEntity } from './category.entities';
+import { NewsActionEntity } from './newsActionHistory.entities';
 
 @Entity('news')
 export class NewsEntities extends BaseEntity {
@@ -21,6 +22,9 @@ export class NewsEntities extends BaseEntity {
 
   @ManyToOne(() => CategoryEntity, (item: CategoryEntity) => item.news)
   category: CategoryEntity;
+
+  @ManyToOne(() => NewsActionEntity, (item: NewsActionEntity) => item.news)
+  actionsEntity: NewsActionEntity[];
 
   @Column()
   title: string;
